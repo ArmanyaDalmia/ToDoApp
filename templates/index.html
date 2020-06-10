@@ -10,7 +10,7 @@
                 list-style: none;
                 padding: 0;
                 margin: 0;
-                width: 300px;
+                width: 200px;
             }
 
             li {
@@ -34,6 +34,8 @@
         </style>
     </head>
     <body>
+        
+<!-- 
         <div class="lists-wrapper">
             <ul id="lists">
               {% for list in lists %}
@@ -44,10 +46,11 @@
               </li>
               {% endfor %}
             </ul>
-          </div>
+          </div> -->
+
           <div class="todos-wrapper">
-            <!--<h4>{{ active_list.name }}</h4>-->
-            <form id="form" method="post" action="/todos/create">
+            <!--<h4>{#{{ active_list.name }}#}</h4>-->
+            <form id="form"> <!--<form id="form" method="post" action="/todos/create"></form>-->
                 <input type="text" id="description" name="description"/>
                 <input type="submit" name="Create"/>
             </form>
@@ -56,10 +59,12 @@
                 {% for d in data %}
                 <li>
                     <input type="checkbox" class="check-completed" data-id="{{ d.id }}" {% if d.completed %} checked {% endif %} /> {{ d.description }}
+                    <button class="delete-button" data-id="{{ d.id }}"> &cross;</button>
                 </li>
                 {% endfor %}
             </ul>
           </div>
+
         <script>
 
             const checkboxes = document.querySelectorAll('.check-completed');
@@ -83,6 +88,18 @@
                     })
                     .catch(function() {
                         document.getElementById('error').className = '';
+                    });
+                }
+            }
+
+            const deleteButtons = document.querySelectorAll('.delete-button');
+            for (let i = 0; i < deleteButtons.length; i++) {
+                const deleteButton = deleteButtons[i];
+                deleteButton.onclick = function(e) {
+                    //console.log('event', e);
+                    const todoID = e.target.dataset['id'];
+                    fetch('/todos/'+ todoID, {
+                        method: 'DELETE'
                     });
                 }
             }
@@ -113,5 +130,6 @@
                 });
             }
         </script>
+
     </body>
 </html>
